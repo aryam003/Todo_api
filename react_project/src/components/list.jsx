@@ -15,6 +15,14 @@ function List(){
         setEditing(true)
         setEditData(task)
     }
+
+    const updateDtls=(id,task)=>{
+        setEditing(false)
+        axios.put(`http://127.0.0.1:8000/api/todo/${id}/`,task).then(res=>{
+            setData(data.map((prv)=>prv.id===id ? res.data : prv))
+        }).catch(error=>console.log(error.message))
+    }
+
     return(
         <div className="container">
             <h1>Diaplay Details</h1>
@@ -38,16 +46,25 @@ function List(){
 
                 </tbody>
             </table>
-            {Editing ? <EditForm curTask={Editdata}/>:null}
+            {Editing ? <EditForm curTask={Editdata} updatefun={updateDtls}/>:null}
         </div>
     )
 }
-const EditForm=({curTask})=>{
+const EditForm=({curTask,updatefun})=>{
     const[task,setTask]=useState(curTask)
+    
+    const handleChange=(e)=>{
+        const{name,value}=e.target
+        setTask({...task,[name]:value})
+    }
+    const handleSubmit=(e)=>{
+        e.preventDefault()
+        updatefun(task.id,task)
+    }
     return(
-        <form action="">
-            <input type="text" name="task" id="task" value={task.task} />
-            <input type="text" name="description" id="description" value={task.description} />
+        <form  onSubmit={handleSubmit}>
+            <input type="text" name="task" id="task" value={task.task} onChange={handleChange} />
+            <input type="text" name="description" id="description" value={task.description} onChange={handleChange} />
             <input type="submit" value="Update" />
 
         </form>
