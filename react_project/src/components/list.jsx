@@ -23,6 +23,12 @@ function List(){
         }).catch(error=>console.log(error.message))
     }
 
+    const Delete_dtls=(id)=>{
+        axios.delete(`http://127.0.0.1:8000/api/todo/${id}/`).then(res=>{
+            setData(data.filter((task)=>task.id!=id))
+        }).catch(error=>console.log(error.message))
+    }
+
     return(
         <div className="container">
             <h1>Diaplay Details</h1>
@@ -39,7 +45,7 @@ function List(){
                             <td>{value.task}</td>
                             <td>{value.description}</td>
                             <td><button className="btn btn-outline-info" onClick={()=>{Edit_dtls(value)}}>Edit</button></td>
-                            <td><button className="btn btn-outline-danger" onClick={()=>{}}>Delete</button></td>
+                            <td><button className="btn btn-outline-danger" onClick={()=>{Delete_dtls(value.id)}}>Delete</button></td>
 
                         </tr>
                     ))}
